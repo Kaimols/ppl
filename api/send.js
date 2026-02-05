@@ -22,20 +22,21 @@ export default async function handler(req, res) {
   }
 
   const tgRes = await fetch(`https://api.telegram.org/bot${token}/sendMessage`, {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({
-      chat_id: chatId,
-      text,
-    }),
-  });
+  method: "POST",
+  headers: { "Content-Type": "application/json" },
+  body: JSON.stringify({
+    chat_id: chatId,
+    text,
+  }),
+});
 
-  const tgText = await tgRes.text();
+const tgText = await tgRes.text();
+console.log("Telegram status:", tgRes.status);
 console.log("Telegram response:", tgText);
 
 if (!tgRes.ok) {
   return res.status(500).send(tgText);
 }
 
-  return res.status(200).send("OK");
+return res.status(200).send("OK");
 }

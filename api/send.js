@@ -1,4 +1,10 @@
+import fetch from "node-fetch";
+
 export default async function handler(req, res) {
+  if (req.method !== "POST") {
+    return res.status(405).send("Method Not Allowed");
+  }
+
   const token = process.env.BOT_TOKEN;
   const chatId = process.env.CHAT_ID;
 
@@ -6,37 +12,27 @@ export default async function handler(req, res) {
     return res.status(500).send("Missing BOT_TOKEN or CHAT_ID");
   }
 
-  let text;
-
-  // FALL 1: Nachricht wird explizit gesendet (dein alter Use-Case)
-  if (req.body && typeof req.body.message === "string") {
-    const message = req.body.message.trim();
-    if (!message || message.length > 200) {
-      return res.status(400).send("Invalid message");
-    }
-    text = message;
-  } 
-  // FALL 2: Klick von der Webseite (kein Body)
-  else {
-    text = "📬 Jemand hat auf den Link geklickt";
-  }
+  const text =
+    req.body?.message && typeof req.body.message === "string"
+      ? req.body.message
+      : "🔔 Jemand hat auf den Link geklickt";
 
   const tgRes = await fetch(`https://api.telegram.org/bot${token}/sendMessage`, {
-  method: "POST",
-  headers: { "Content-Type": "application/json" },
-  body: JSON.stringify({
-    chat_id: chatId,
-    text,
-  }),
-});
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({
+      chat_id: chatId,
+      text,
+    }),
+  });
 
-const tgText = await tgRes.text();
-console.log("Telegram status:", tgRes.status);
-console.log("Telegram response:", tgText);
+  const tgText = await tgRes.text();
+  console.log("Telegram status:", tgRes.status);
+  console.log("Telegram response:", tgText);
 
-if (!tgRes.ok) {
-  return res.status(500).send(tgText);
-}
+  if (!tgRes.ok) {
+    return res.status(500).send(tgText);
+  }
 
-return res.status(200).send("OK");
+  return res.status(200).send("OK");
 }

@@ -19,6 +19,7 @@
   },
   "homepage": "https://github.com/vs5jwnpdzn-coder/pp#readme",
   "dependencies": {
+    "node-fetch": "^3.3.2",
     "nodemailer": "^7.0.12"
   }
 }

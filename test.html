@@ -1,0 +1,35 @@
+<!doctype html>
+<html lang="de">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Guten Tag</title>
+  <style>
+    html, body {
+      height: 100%;
+      margin: 0;
+    }
+    body {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-family: Arial, Helvetica, sans-serif;
+      background: #ffffff;
+    }
+    h1 {
+      font-size: 72px;
+      font-weight: 700;
+    }
+  </style>
+</head>
+<body>
+  <h1>Guten Tag</h1>
+
+  <!-- Weiterleitung nach 5 Sekunden -->
+  <script>
+    setTimeout(() => {
+      window.location.href = "screen.html"; // Zielseite
+    }, 5000);
+  </script>
+</body>
+</html>

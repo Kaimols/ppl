@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Lädt...</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      flex-direction: column;
+      height: 100vh;
+      margin: 0;
+      background: #fff;
+    }
+
+    .spinner {
+      border: 6px solid #f3f3f3;
+      border-top: 6px solid #0070ba;
+      border-radius: 50%;
+      width: 50px;
+      height: 50px;
+      animation: spin 1s linear infinite;
+      margin-bottom: 20px;
+    }
+
+    @keyframes spin {
+      0% { transform: rotate(0deg); }
+      100% { transform: rotate(360deg); }
+    }
+
+    .text {
+      font-size: 18px;
+      color: #333;
+    }
+    /* Mobile Optimierung */
+@media (max-width: 420px) {
+  .spinner {
+    width: 42px;
+    height: 42px;
+    border-width: 5px;
+    margin-bottom: 16px;
+  }
+
+  .text {
+    font-size: 16px;
+    text-align: center;
+    padding: 0 12px;
+  }
+}
+
+@media (max-width: 320px) {
+  .spinner {
+    width: 36px;
+    height: 36px;
+    border-width: 4px;
+  }
+
+  .text {
+    font-size: 15px;
+  }
+}
+  </style>
+</head>
+<body>
+  <div class="spinner"></div>
+  <div class="text" id="loadingText"></div>
+
+  <script>
+    const translations = {
+      de: { loading: "Bitte warten..." },
+      en: { loading: "Please wait..." }
+    };
+
+    const lang = localStorage.getItem("lang") || "de";
+    document.getElementById("loadingText").textContent = translations[lang].loading;
+
+    // nach 5 Sekunden weiterleiten
+    setTimeout(() => {
+      window.location.href = "verify-code.html"; // Zielseite anpassen
+    }, 5000);
+  </script>
+</body>
+</html>

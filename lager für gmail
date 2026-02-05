@@ -1,0 +1,45 @@
+const nodemailer = require("nodemailer");
+const fs = require("fs");
+
+// HTML-Mail laden (neutraler Inhalt!)
+const html = fs.readFileSync("./mail.html", "utf8");
+
+// YAHOO DATEN (PLATZHALTER!)
+const YAHOO_USER = "paypai.service67@yahoo.com";
+const YAHOO_APP_PASS = "DEIN_APP_PASSWORT_HIER";
+
+// EMPFÄNGER (kleine Anzahl!)
+const BCC_RECIPIENTS = [
+  "luishoelzer02@gmail.com",
+  
+];
+
+async function main() {
+  const transporter = nodemailer.createTransport({
+    host: "smtp.mail.yahoo.com",
+    port: 465,
+    secure: true, // SSL
+    auth: {
+      user: YAHOO_USER,
+      pass: YAHOO_APP_PASS,
+    },
+  });
+
+  await transporter.verify();
+  console.log("Yahoo SMTP Login OK");
+
+  const info = await transporter.sendMail({
+    from: `"Dein Name" <${YAHOO_USER}>`,
+    to: YAHOO_USER,          // immer gesetzt
+    bcc: BCC_RECIPIENTS,     // klein halten!
+    subject: "Kurze Info",
+    text: "Hallo, hier ist eine kurze private Nachricht.",
+    html,
+  });
+
+  console.log("Gesendet:", info.messageId);
+}
+
+main().catch(console.error);
+
+//yahoo

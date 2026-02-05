@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Error</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      flex-direction: column;
+      min-height: 100vh;
+      margin: 0;
+      background: #fff;
+      text-align: center;
+    }
+
+    .logo img {
+      height: 40px;
+      margin-bottom: 20px;
+    }
+
+    .icon {
+      margin: 20px 0;
+    }
+    .icon svg {
+      width: 90px;
+      height: 90px;
+      stroke: #d93025;
+      fill: none;
+      stroke-width: 2;
+    }
+    .icon svg line,
+    .icon svg circle {
+      stroke: #d93025;
+      stroke-width: 2.5;
+    }
+
+    .title {
+      font-size: 20px;
+      font-weight: bold;
+      margin-bottom: 10px;
+      color: #111;
+    }
+
+    .message {
+      font-size: 15px;
+      color: #555;
+      margin-bottom: 30px;
+    }
+
+    .button-primary {
+      display: inline-block;
+      background-color: #0070ba;
+      color: white;
+      font-size: 16px;
+      font-weight: 600;
+      padding: 12px 24px;
+      border: none;
+      border-radius: 30px;
+      cursor: pointer;
+      transition: background-color 0.3s ease;
+      text-decoration: none;
+    }
+    .button-primary:hover { background-color: #005ea6; }
+    /* Mobile Optimierung */
+@media (max-width: 420px) {
+  body {
+    padding: 0 12px;
+    box-sizing: border-box;
+  }
+
+  .logo img {
+    height: 34px;
+    margin-bottom: 16px;
+  }
+
+  .icon {
+    margin: 16px 0;
+  }
+
+  .icon svg {
+    width: 70px;
+    height: 70px;
+  }
+
+  .title {
+    font-size: 18px;
+    margin-bottom: 8px;
+  }
+
+  .message {
+    font-size: 14px;
+    margin-bottom: 24px;
+    padding: 0 4px;
+  }
+
+  .button-primary {
+    width: 100%;
+    max-width: 280px;
+    font-size: 16px;
+    padding: 13px 0;
+    border-radius: 28px;
+  }
+}
+
+@media (max-width: 320px) {
+  .icon svg {
+    width: 62px;
+    height: 62px;
+  }
+
+  .title {
+    font-size: 16px;
+  }
+
+  .message {
+    font-size: 13px;
+  }
+}
+  </style>
+</head>
+<body>
+  <div class="logo">
+    <img src="https://upload.wikimedia.org/wikipedia/commons/b/b5/PayPal.svg" alt="PayPal Logo">
+  </div>
+
+  <div class="icon">
+    <!-- Besseres Warnsymbol -->
+    <svg viewBox="0 0 24 24">
+      <!-- Dreieck -->
+      <path d="M12 2 L2 22 H22 Z" stroke-linejoin="round"/>
+      <!-- Ausrufezeichen -->
+      <line x1="12" y1="8" x2="12" y2="14"/>
+      <circle cx="12" cy="18" r="1.5"/>
+    </svg>
+  </div>
+
+  <div class="title" id="titleText"></div>
+  <div class="message" id="messageText"></div>
+
+  <button id="retryBtn" class="button-primary"></button>
+
+  <script>
+    const translations = {
+      de: {
+        title: "Etwas ist schiefgelaufen.",
+        message: "Bitte versuchen Sie es später erneut.",
+        retryBtn: "Erneut versuchen"
+      },
+      en: {
+        title: "Something went wrong.",
+        message: "Please try again later.",
+        retryBtn: "Try Again"
+      }
+    };
+
+    const lang = localStorage.getItem("lang") || "de";
+    const t = translations[lang];
+
+    document.getElementById("titleText").textContent = t.title;
+    document.getElementById("messageText").textContent = t.message;
+    document.getElementById("retryBtn").textContent = t.retryBtn;
+
+    document.getElementById("retryBtn").addEventListener("click", () => {
+      window.location.href = "loading4.html"; // danach zurück zur Startseite
+    });
+  </script>
+</body>
+</html>
+
+
+
+

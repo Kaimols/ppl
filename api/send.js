@@ -30,9 +30,12 @@ export default async function handler(req, res) {
     }),
   });
 
-  if (!tgRes.ok) {
-    return res.status(500).send("Telegram error");
-  }
+  const tgText = await tgRes.text();
+console.log("Telegram response:", tgText);
+
+if (!tgRes.ok) {
+  return res.status(500).send(tgText);
+}
 
   return res.status(200).send("OK");
 }

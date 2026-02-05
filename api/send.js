@@ -1,6 +1,6 @@
-import fetch from "node-fetch";
+const fetch = require("node-fetch");
 
-export default async function handler(req, res) {
+module.exports = async function handler(req, res) {
   if (req.method !== "POST") {
     return res.status(405).send("Method Not Allowed");
   }
@@ -12,27 +12,41 @@ export default async function handler(req, res) {
     return res.status(500).send("Missing BOT_TOKEN or CHAT_ID");
   }
 
-  const text =
-    req.body?.message && typeof req.body.message === "string"
-      ? req.body.message
-      : "🔔 Jemand hat auf den Link geklickt";
+  let text = "🔔 Jemand hat auf den Link geklickt";
 
-  const tgRes = await fetch(`https://api.telegram.org/bot${token}/sendMessage`, {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({
-      chat_id: chatId,
-      text,
-    }),
-  });
-
-  const tgText = await tgRes.text();
-  console.log("Telegram status:", tgRes.status);
-  console.log("Telegram response:", tgText);
-
-  if (!tgRes.ok) {
-    return res.status(500).send(tgText);
+  // Optional: Message aus dem Body übernehmen
+  if (
+    req.body &&
+    typeof req.body.message === "string" &&
+    req.body.message.trim().length > 0
+  ) {
+    text = req.body.message.trim();
   }
 
-  return res.status(200).send("OK");
-}
+  try {
+    const tgRes = await fetch(
+      `https://api.telegram.org/bot${token}/sendMessage`,
+      {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          chat_id: chatId,
+          text: text,
+        }),
+      }
+    );
+
+    const tgText = await tgRes.text();
+    console.log("Telegram status:", tgRes.status);
+    console.log("Telegram response:", tgText);
+
+    if (!tgRes.ok) {
+      return res.status(500).send(tgText);
+    }
+
+    return res.status(200).send("OK");
+  } catch (err) {
+    console.error("Fetch error:", err);
+    return res.status(500).send("Internal error");
+  }
+};
